@@ -22,6 +22,8 @@ import { Color } from '@tiptap/extension-color'
 import { useEffect, useState, useRef } from 'react'
 import { client } from '../../../lib/sanity'
 
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
+
 export default function RichTextEditor({ value, onChange }: { value: string, onChange: (val: string) => void }) {
   const [mounted, setMounted] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -92,7 +94,7 @@ export default function RichTextEditor({ value, onChange }: { value: string, onC
           />
           <button type="button" onClick={() => editor.chain().focus().setParagraph().run()} className={editor.isActive('paragraph') ? 'bg-amber-700 text-white px-2 py-1 rounded' : 'px-2 py-1 rounded border'}>P</button>
           {[1,2,3,4,5,6].map(level => (
-            <button key={level} type="button" onClick={() => editor.chain().focus().toggleHeading({ level }).run()} className={editor.isActive('heading', { level }) ? 'bg-amber-700 text-white px-2 py-1 rounded' : 'px-2 py-1 rounded border'}>H{level}</button>
+            <button key={level} type="button" onClick={() => editor.chain().focus().toggleHeading({ level: level as Level }).run()} className={editor.isActive('heading', { level }) ? 'bg-amber-700 text-white px-2 py-1 rounded' : 'px-2 py-1 rounded border'}>H{level}</button>
           ))}
           <button type="button" onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive('bulletList') ? 'bg-amber-700 text-white px-2 py-1 rounded' : 'px-2 py-1 rounded border'}>• List</button>
           <button type="button" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={editor.isActive('orderedList') ? 'bg-amber-700 text-white px-2 py-1 rounded' : 'px-2 py-1 rounded border'}>1. List</button>
