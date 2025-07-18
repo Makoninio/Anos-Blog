@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    const doc = {
+    const doc: any = {
       _type: 'post',
       title,
       slug: {
