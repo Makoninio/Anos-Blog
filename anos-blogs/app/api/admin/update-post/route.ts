@@ -42,7 +42,7 @@ export async function PUT(req: NextRequest) {
       };
     }
 
-    const updateData = {
+    const updateData: any = {
       title,
       slug: {
         _type: 'slug',
