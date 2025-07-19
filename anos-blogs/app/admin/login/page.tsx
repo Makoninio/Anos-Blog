@@ -14,24 +14,31 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted!', credentials); // Debug log
     setLoading(true);
     setError('');
 
     try {
+      console.log('Making fetch request...'); // Debug log
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials),
       });
 
+      console.log('Response received:', response.status); // Debug log
+
       if (response.ok) {
+        console.log('Login successful!'); // Debug log
         router.push('/admin');
         router.refresh();
       } else {
         const data = await response.json();
+        console.log('Login failed:', data); // Debug log
         setError(data.error || 'Login failed');
       }
     } catch (error) {
+      console.error('Login error:', error); // Debug log
       setError('An error occurred during login');
     } finally {
       setLoading(false);

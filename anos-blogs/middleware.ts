@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verify } from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 export function middleware(request: NextRequest) {
   // Only apply to admin routes
@@ -12,22 +9,28 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Check for admin token
-    const token = request.cookies.get('admin-token')?.value;
+    // Check for admin session cookie
+    const adminSession = request.cookies.get('admin-session')?.value;
+    
+    console.log('Middleware check:', {
+      path: request.nextUrl.pathname,
+      hasSession: !!adminSession,
+      sessionValue: adminSession
+    });
 
-    if (!token) {
-      // Redirect to login if no token
+    if (!adminSession) {
+      console.log('No session found, redirecting to login');
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
-    try {
-      // Verify token
-      verify(token, JWT_SECRET);
+    // Simple session check
+    if (adminSession === 'authenticated') {
+      console.log('Session verified successfully');
       return NextResponse.next();
-    } catch (error) {
-      // Invalid token, redirect to login
+    } else {
+      console.log('Invalid session, redirecting to login');
       const response = NextResponse.redirect(new URL('/admin/login', request.url));
-      response.cookies.set('admin-token', '', {
+      response.cookies.set('admin-session', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',

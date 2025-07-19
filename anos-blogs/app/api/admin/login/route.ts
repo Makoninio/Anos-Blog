@@ -1,37 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { sign } from 'jsonwebtoken';
 
 export const runtime = 'nodejs';
 
 // Configure these credentials - CHANGE THESE FOR PRODUCTION!
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
+    console.log('Login attempt:', { username, expectedUsername: ADMIN_USERNAME });
+
     // Validate credentials
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      // Create JWT token
-      const token = sign(
-        { username, role: 'admin' },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-      );
+      console.log('Login successful, setting session cookie');
 
-      // Set HTTP-only cookie
+      // Set simple session cookie
       const response = NextResponse.json({ success: true });
-      response.cookies.set('admin-token', token, {
+      response.cookies.set('admin-session', 'authenticated', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: false, // Set to false for localhost development
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60, // 24 hours
         path: '/',
       });
 
+      console.log('Session cookie set');
       return response;
     } else {
       return NextResponse.json(
