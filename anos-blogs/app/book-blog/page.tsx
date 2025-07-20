@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from "react";
 import { client, urlFor } from "../../lib/sanity";
 import { postsQuery, categoriesQuery, currentlyReadingQuery } from "../../lib/queries";
