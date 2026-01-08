@@ -11,6 +11,17 @@ const client = createClient({
 
 export async function DELETE(req: NextRequest) {
   try {
+    // Check if token exists
+    if (!process.env.SANITY_API_TOKEN) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'SANITY_API_TOKEN is not configured. Please add it to your .env.local file with Editor or Admin permissions. See SANITY_TOKEN_SETUP.md for instructions.' 
+        },
+        { status: 500 }
+      );
+    }
+
     const { postId } = await req.json();
     
     // Validate required fields
@@ -29,10 +40,22 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error('Error deleting post:', error);
+    
+    // Provide more helpful error messages
+    let errorMessage = 'Unknown error occurred';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      
+      // Check for permission errors
+      if (errorMessage.includes('permission') || errorMessage.includes('Insufficient permissions')) {
+        errorMessage = `Permission denied: Your SANITY_API_TOKEN needs "Editor" or "Admin" permissions to delete posts. Current token may have only "Viewer" permissions. Please check your token settings at https://www.sanity.io/manage and ensure it has write access.`;
+      }
+    }
+    
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error occurred' 
+        error: errorMessage 
       },
       { status: 500 }
     );

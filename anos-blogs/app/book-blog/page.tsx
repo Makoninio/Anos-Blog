@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import React from "react";
-import { client, urlFor } from "../../lib/sanity";
+import { client } from "../../lib/sanity.server";
 import { postsQuery, categoriesQuery, currentlyReadingQuery } from "../../lib/queries";
 import { Post, Category, CurrentlyReading } from "../../lib/sanity";
 import BookBlogClient from "./components/BookBlogClient";

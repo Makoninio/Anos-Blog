@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import Link from "next/link";
-import { client, urlFor } from "../lib/sanity";
+import { client, urlFor } from "../lib/sanity.server";
 import { latestPostsQuery } from "../lib/queries";
 import { Post } from "../lib/sanity";
 

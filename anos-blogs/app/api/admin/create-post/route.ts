@@ -11,6 +11,17 @@ const client = createClient({
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if token exists
+    if (!process.env.SANITY_API_TOKEN) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'SANITY_API_TOKEN is not configured. Please add it to your .env.local file with Editor or Admin permissions. See SANITY_TOKEN_SETUP.md for instructions.' 
+        },
+        { status: 500 }
+      );
+    }
+
     const formData = await req.formData();
     const title = formData.get('title');
     const excerpt = formData.get('excerpt');

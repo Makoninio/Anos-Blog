@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { client } from '../../../lib/sanity'
+import { client, urlFor } from '../../../lib/sanity.server'
 import { postsQuery } from '../../../lib/queries'
-import { urlFor } from '../../../lib/sanity'
+import DeletePostButton from './components/DeletePostButton'
 
 export default async function PostsPage() {
   const posts = await client.fetch(postsQuery)
@@ -122,20 +122,23 @@ export default async function PostsPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex space-x-2 pt-2 border-t border-gray-100">
-                    <Link
-                      href={`/admin/posts/${post.slug.current}`}
-                      className="flex-1 bg-amber-50 text-amber-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors duration-200 text-center"
-                    >
-                      Edit
-                    </Link>
-                    <Link
-                      href={`/book-blog/${post.slug.current}`}
-                      className="flex-1 bg-gray-50 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors duration-200 text-center"
-                      target="_blank"
-                    >
-                      View
-                    </Link>
+                  <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
+                    <div className="flex space-x-2">
+                      <Link
+                        href={`/admin/posts/${post.slug.current}`}
+                        className="flex-1 bg-amber-50 text-amber-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-amber-100 transition-colors duration-200 text-center"
+                      >
+                        Edit
+                      </Link>
+                      <Link
+                        href={`/book-blog/${post.slug.current}`}
+                        className="flex-1 bg-gray-50 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors duration-200 text-center"
+                        target="_blank"
+                      >
+                        View
+                      </Link>
+                    </div>
+                    <DeletePostButton postId={post._id} postTitle={post.title} />
                   </div>
                 </div>
               </div>

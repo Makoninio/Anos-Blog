@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { client, urlFor } from '../../../lib/sanity';
+import { client, urlFor } from '../../../lib/sanity.client';
 import Link from 'next/link';
 
 interface Author {

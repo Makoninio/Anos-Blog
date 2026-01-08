@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Post, Category, CurrentlyReading } from "../../../lib/sanity";
-import { urlFor } from "../../../lib/sanity";
+import { urlFor } from "../../../lib/sanity.client";
 
 interface BookBlogClientProps {
   posts: Post[];

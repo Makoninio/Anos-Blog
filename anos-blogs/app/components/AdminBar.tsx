@@ -5,8 +5,18 @@ import { useEffect, useState } from "react";
 export default function AdminBar() {
   const [show, setShow] = useState(false);
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("adminSession")) {
-      setShow(true);
+    if (typeof document === "undefined") return;
+    try {
+      // Check if admin-session cookie exists (same as middleware uses)
+      const cookies = document.cookie.split(';');
+      const adminSession = cookies.find(cookie => 
+        cookie.trim().startsWith('admin-session=')
+      );
+      if (adminSession && adminSession.includes('authenticated')) {
+        setShow(true);
+      }
+    } catch {
+      // Ignore cookie access errors
     }
   }, []);
   if (!show) return null;

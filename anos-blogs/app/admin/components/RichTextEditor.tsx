@@ -20,7 +20,7 @@ import FontSize from '@tiptap/extension-font-size'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import { useEffect, useState, useRef } from 'react'
-import { client } from '../../../lib/sanity'
+import { client } from '../../../lib/sanity.client'
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 

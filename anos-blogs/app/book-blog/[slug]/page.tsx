@@ -1,4 +1,4 @@
-import { client, urlFor } from "../../../lib/sanity";
+import { client, urlFor } from "../../../lib/sanity.server";
 import { postQuery } from "../../../lib/queries";
 import { Post } from "../../../lib/sanity";
 import { notFound } from "next/navigation";

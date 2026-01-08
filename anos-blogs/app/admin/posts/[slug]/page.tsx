@@ -1,10 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { client } from '../../../../lib/sanity';
+import { client, urlFor } from '../../../../lib/sanity.client';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { urlFor } from '../../../../lib/sanity';
 
 interface Author {
   _id: string;

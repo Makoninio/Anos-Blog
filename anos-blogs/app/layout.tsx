@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
-import AdminBar from "./components/AdminBar";
+import AdminBarWrapper from "./components/AdminBarWrapper";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -33,9 +33,9 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${inter.variable} antialiased`}
       >
-        <AdminBar />
+        <AdminBarWrapper />
         <Navigation />
-        <div className="pt-6">{children}</div>
+        <div>{children}</div>
       </body>
     </html>
   );
