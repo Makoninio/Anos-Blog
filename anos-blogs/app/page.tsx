@@ -21,7 +21,7 @@ export default async function Home() {
           {/* Text on the left */}
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-5xl md:text-6xl font-bold text-[#2c2a29] mb-4 font-serif">
-              Welcome to Ano's Book Nook
+              Welcome to Ano's Blog
             </h1>
             <p className="text-xl text-[#d4a574] mb-6 italic">
               Where every page is a new beginning.
@@ -194,7 +194,7 @@ export default async function Home() {
           </div>
           <div className="border-t border-[#4a4438] pt-8 text-center">
             <p className="text-[#d4c4a8]">
-              © 2024 Ano's Book Nook. All rights reserved.
+              © {new Date().getFullYear()} Ano's Book Blog. All rights reserved.
             </p>
           </div>
         </div>
