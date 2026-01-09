@@ -76,6 +76,7 @@ export default function EditCategoryPage() {
       if (result.success) {
         alert('Category updated successfully!');
         router.push('/admin/categories');
+        router.refresh();
       } else {
         alert('Failed to update category: ' + result.error);
       }
