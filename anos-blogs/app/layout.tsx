@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import AdminBarWrapper from "./components/AdminBarWrapper";
+import AuthSessionProvider from "./components/SessionProvider";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -33,9 +34,11 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${inter.variable} antialiased`}
       >
-        <AdminBarWrapper />
-        <Navigation />
-        <div>{children}</div>
+        <AuthSessionProvider>
+          <AdminBarWrapper />
+          <Navigation />
+          <div>{children}</div>
+        </AuthSessionProvider>
       </body>
     </html>
   );

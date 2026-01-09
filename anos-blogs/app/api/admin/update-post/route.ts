@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from 'next-sanity';
+import { requireAdmin } from '@/lib/admin-auth';
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -11,6 +12,14 @@ const client = createClient({
 
 export async function PUT(req: NextRequest) {
   try {
+    const session = await requireAdmin();
+    if (!session) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized - Session not found' },
+        { status: 401 }
+      );
+    }
+
     const formData = await req.formData();
     const postId = formData.get('postId');
     const title = formData.get('title');

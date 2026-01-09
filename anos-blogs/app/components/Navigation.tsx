@@ -2,29 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // Check if user is logged in as admin
-  useEffect(() => {
-    const checkAdminStatus = () => {
-      // Check if admin-session cookie exists
-      const cookies = document.cookie.split(';');
-      const adminSession = cookies.find(cookie => 
-        cookie.trim().startsWith('admin-session=')
-      );
-      setIsAdmin(!!adminSession);
-    };
-
-    checkAdminStatus();
-    // Check every few seconds to update status
-    const interval = setInterval(checkAdminStatus, 2000);
-    return () => clearInterval(interval);
-  }, []);
+  const { data: session } = useSession();
+  const isAdmin = !!session?.user?.email;
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -34,10 +19,7 @@ export default function Navigation() {
   ];
 
   const handleLogout = () => {
-    // Clear the admin session cookie
-    document.cookie = 'admin-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    setIsAdmin(false);
-    window.location.href = '/';
+    signOut({ callbackUrl: "/" });
   };
 
   return (

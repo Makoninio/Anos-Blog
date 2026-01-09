@@ -1,24 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-
   const handleLogout = async () => {
-    try {
-      await fetch('/api/admin/logout', {
-        method: 'POST',
-      });
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+    signOut({ callbackUrl: '/admin/login' });
   };
 
   return (

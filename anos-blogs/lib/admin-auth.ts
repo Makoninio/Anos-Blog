@@ -1,18 +1,11 @@
-// Simple admin authentication
-export const ADMIN_CREDENTIALS = {
-  email: "admin@example.com",
-  password: "admin123"
-}
+import { getServerSession } from "next-auth";
+import { isAdminEmail } from "./admin-access";
+import { authOptions } from "./auth-options";
 
-export function validateAdminCredentials(email: string, password: string): boolean {
-  return email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password
-}
-
-export function createAdminSession() {
-  return {
-    id: "1",
-    email: ADMIN_CREDENTIALS.email,
-    name: "Admin",
-    role: "admin"
+export async function requireAdmin() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email || !isAdminEmail(session.user.email)) {
+    return null;
   }
-} 
+  return session;
+}

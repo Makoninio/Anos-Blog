@@ -1,49 +1,41 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { isAdminEmail } from "./lib/admin-access";
 
-export function middleware(request: NextRequest) {
-  // Only apply to admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    // Skip authentication for login page
-    if (request.nextUrl.pathname === '/admin/login') {
-      return NextResponse.next();
+export const config = {
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
+};
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/admin/login") {
+    return NextResponse.next();
+  }
+
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  const email = token?.email as string | undefined;
+  const isAllowed = isAdminEmail(email);
+
+  if (pathname.startsWith("/admin")) {
+    if (!isAllowed) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
+  }
 
-    // Check for admin session cookie
-    const adminSession = request.cookies.get('admin-session')?.value;
-    
-    console.log('Middleware check:', {
-      path: request.nextUrl.pathname,
-      hasSession: !!adminSession,
-      sessionValue: adminSession
-    });
-
-    if (!adminSession) {
-      console.log('No session found, redirecting to login');
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-
-    // Simple session check
-    if (adminSession === 'authenticated') {
-      console.log('Session verified successfully');
-      return NextResponse.next();
-    } else {
-      console.log('Invalid session, redirecting to login');
-      const response = NextResponse.redirect(new URL('/admin/login', request.url));
-      response.cookies.set('admin-session', '', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 0,
-        path: '/',
-      });
-      return response;
+  if (pathname.startsWith("/api/admin")) {
+    if (!isAllowed) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized - Session not found" },
+        { status: 401 }
+      );
     }
   }
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: '/admin/:path*',
-}; 
